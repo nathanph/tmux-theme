@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
 tmux set-option -gqo @TMUX_HOME "$HOME/.config/tmux"
 TMUX_HOME="$(tmux show-option -gv @TMUX_HOME)"
@@ -14,9 +14,13 @@ TMUX_PLUGINS="$(tmux show-option -gv @TMUX_PLUGINS)"
 
 # Use our theme if it exists.
 TMUX_THEME="$(tmux show-option -gv @TMUX_THEME)"
-TMUX_THEME_FILE="$TMUX_THEMES/$TMUX_THEME.conf"
+TMUX_THEME_FILE="$TMUX_THEMES/$TMUX_THEME/theme.tmux"
 
-tmux display-message -p "[INFO] Loading theme '$TMUX_THEME' at '$TMUX_THEME_FILE'!"
-tmux if-shell "test -f $TMUX_THEME_FILE" \
-  "source-file $TMUX_THEME_FILE" \
-  "display-message -p \"[WARNING] Could not locate theme '$TMUX_THEME' at '$TMUX_THEME_FILE'!\""
+tmux display-message "[INFO] Loading theme '$TMUX_THEME' at '$TMUX_THEME_FILE'!"
+
+if [ -f "$TMUX_THEME_FILE" ]; then
+  tmux source-file "$TMUX_THEME_FILE"
+  tmux display-message "[INFO] Theme '$TMUX_THEME' successfully loaded!"
+else
+  tmux display-message "[WARNING] Could not locate theme '$TMUX_THEME' at '$TMUX_THEME_FILE'!"
+fi
